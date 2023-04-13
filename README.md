@@ -9,7 +9,7 @@ Stock Tracker is a React application that allows users to track stock prices and
 4. Easy navigation between the tracked stocks list and individual stock charts.
 
 <b> Technologies Used </b>
-> React.js
+> React.js 
 > React Router
 > Recharts
 > Bootstrap
