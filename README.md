@@ -1,4 +1,5 @@
-<b>Stock Tracker</b>
+<b>Stock Tracker</b> 
+
 Stock Tracker is a React application that allows users to track stock prices and view historical price charts. The app fetches stock data from the IEX Cloud API and uses the Recharts library to display visually appealing and informative stock price charts. 
 
 <b> Features </b>
