@@ -41,3 +41,13 @@ Getting Started:
     - Enter a stock ticker symbol (e.g., AAPL for Apple Inc.) in the input field and click the "Submit" button.
     The entered stock will be added to the tracked stocks list on the left side of the page.
     Click on a stock in the list to view its historical stock price chart.
+    
+    
+    
+    <img width="493" alt="Screen Shot 2023-04-12 at 4 15 19 PM" src="https://user-images.githubusercontent.com/105238029/231614844-4b9f7ba7-7c1f-4d97-96c0-68b08ae0d09e.png">
+
+
+<img width="1397" alt="Screen Shot 2023-04-12 at 4 19 25 PM" src="https://user-images.githubusercontent.com/105238029/231614876-e4390fc2-a7a8-483c-8acb-7676f1535e0d.png">
+
+
+    
