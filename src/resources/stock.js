@@ -79,7 +79,8 @@ export const stock = {
   },
 
   // formatPriceData takes the raw data from the API and returns an object with the price, date, and time
-  formatPriceData: (data) => {
+  formatPriceData: (data) => { // Q. where is this function called
+    // A. It is called in the latestPrice function
     if (!data || data.length === 0) {
       return { price: null, date: null, time: null };
     }
@@ -87,13 +88,17 @@ export const stock = {
     const stockData = data[data.length - 1];
     console.log("stockData:", stockData);
     const formattedData = {};
-    if (stockData.close === null) {
-      formattedData.price = stockData.marketClose;
-    } else {
-      formattedData.price = stockData.price;
-    }
+    formattedData.price = stockData.price;
+    // if (stockData.close === null) {
+    //   formattedData.price = stockData.marketClose;
+    //   console.log("marketClose:", stockData.marketClose);
+    // } else if (stockData.price !== null){
+    //   formattedData.price = stockData.price;
+    //}
     formattedData.date = stockData.date;
     formattedData.time = stockData.label;
+
+    console.log("formattedData:", formattedData)
     return formattedData;
   },
  // getYesterdaysClose takes the ticker and date and returns the previous business day's closing price

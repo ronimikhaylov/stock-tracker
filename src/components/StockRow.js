@@ -1,6 +1,7 @@
 // Import necessary libraries and components
 import React, { Component } from "react";
 import { stock, getPreviousBusinessDay } from "../resources/stock.js";
+import { Link } from "react-router-dom";
 
 // Define the StockRow class component
 class StockRow extends Component {
@@ -42,8 +43,10 @@ class StockRow extends Component {
     stock.getYesterdaysClose(
       this.props.ticker,
       yesterdayFormatted,
+      
       (yesterdayData) => {
         // Calculate the dollar change and percentage change between today's price and yesterday's price
+        console.log("yesterdayData:", yesterdayData)
         const dollar_change = (data.price - yesterdayData.price).toFixed(2);
         const percent_change =
           (
@@ -65,9 +68,7 @@ class StockRow extends Component {
     stock.latestPrice(this.props.ticker, this.applyData.bind(this));
   }
 
-  // Render the StockRow component
   render() {
-    // Get the appropriate style for the price change display
     const changeStyleData = this.changeStyle();
     return (
       <li className="list-group-item">
@@ -83,9 +84,18 @@ class StockRow extends Component {
           {changeStyleData.changeSymbol}${Math.abs(this.state.dollar_change)}
           &nbsp;{this.state.percent_change}
         </span>
+        <span style={{ fontSize: "0.8rem", color: "black", marginLeft: "5px" }}>
+          {this.state.date} {this.state.time}
+        </span>
+        <Link to={`/news/${this.props.ticker}`}>
+          <button className="btn btn-primary" style={{ marginLeft: "10px" }}>
+            View News for {this.props.ticker}
+          </button>
+        </Link>
       </li>
     );
   }
+  
 }
 
 export default StockRow;
