@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import News from "./components/News";
 
 import StockRow from "./components/StockRow";
 import StockChart from "./components/StockChart";
@@ -17,7 +18,7 @@ function App() {
 
   const validateTicker = async (ticker) => {
     const response = await fetch(
-      `https://cloud.iexapis.com/stable/stock/${ticker}/quote?token=pk_48e0d6792e704c60b428ae4ee8db3563`
+      `https://cloud.iexapis.com/stable/stock/${ticker}/quote?token=IEX_TOKEN`
     );
     return response.ok;
   };
@@ -46,6 +47,7 @@ function App() {
       <div className="App">
         <div className="container full-width">
           <Routes>
+            <Route path="/news/:ticker" element={<News />} />
             <Route
               path="/"
               element={

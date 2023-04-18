@@ -1,7 +1,7 @@
 // Import necessary libraries and components
 import React, { Component } from "react";
-import { stock, getPreviousBusinessDay } from "../resources/stock.js";
-
+import { stock } from "../resources/stock.js";
+import { Link } from "react-router-dom";
 // Define the StockRow class component
 class StockRow extends Component {
   constructor(props) {
@@ -27,44 +27,39 @@ class StockRow extends Component {
   }
 
   // Define a function to apply the fetched data to the state
-  applyData(data) {
+  applyData(latestPrice, yesterdaysClose) {
     // Update the state with the latest price, date, and time
     this.setState({
-      price: data.price,
-      date: data.date,
-      time: data.time,
+      price: latestPrice.price,
+      date: latestPrice.date,
+      time: latestPrice.time,
     });
 
-    // Get the previous business day's date
-    const yesterdayFormatted = getPreviousBusinessDay();
-
-    // Fetch the stock price from the previous business day for the given ticker
-    stock.getYesterdaysClose(
-      this.props.ticker,
-      yesterdayFormatted,
-      (yesterdayData) => {
-        // Calculate the dollar change and percentage change between today's price and yesterday's price
-        const dollar_change = (data.price - yesterdayData.price).toFixed(2);
-        const percent_change =
-          (
-            ((data.price - yesterdayData.price) / yesterdayData.price) *
-            100
-          ).toFixed(2) + "%";
-
-        // Update the state with the calculated dollar change and percentage change
-        this.setState({
-          dollar_change: parseFloat(dollar_change), // Store the value as a number
-          percent_change: "(" + percent_change + ")",
-        });
-      }
+    // Calculate the dollar change and percentage change between today's price and yesterday's price
+    const dollar_change = (latestPrice.price - yesterdaysClose.price).toFixed(
+      2
     );
+    const percent_change =
+      (
+        ((latestPrice.price - yesterdaysClose.price) / yesterdaysClose.price) *
+        100
+      ).toFixed(2) + "%";
+
+    // Update the state with the calculated dollar change and percentage change
+    this.setState({
+      dollar_change: parseFloat(dollar_change), // Store the value as a number
+      percent_change: "(" + percent_change + ")",
+    });
   }
 
   // When the component mounts, fetch the latest stock price and apply the data
   componentDidMount() {
-    stock.latestPrice(this.props.ticker, this.applyData.bind(this));
+    stock.fetchPrices(this.props.ticker, ({ latestPrice, yesterdaysClose }) => {
+      this.applyData(latestPrice, yesterdaysClose);
+    });
   }
 
+  // Render the StockRow component
   // Render the StockRow component
   render() {
     // Get the appropriate style for the price change display
@@ -83,6 +78,11 @@ class StockRow extends Component {
           {changeStyleData.changeSymbol}${Math.abs(this.state.dollar_change)}
           &nbsp;{this.state.percent_change}
         </span>
+        <Link to={`/news/${this.props.ticker}`}>
+          <button className="btn btn-sm btn-outline-secondary float-right">
+            View News for {this.props.ticker}
+          </button>
+        </Link>
       </li>
     );
   }

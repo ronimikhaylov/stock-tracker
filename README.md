@@ -32,11 +32,9 @@ Getting Started:
     - src/components/StockChart.js
     - src/config/iex.js
 
-
 > Start the development server:
     - npm start
     - The application will now be running on http://localhost:3000.
-
 > Usage
     - Enter a stock ticker symbol (e.g., AAPL for Apple Inc.) in the input field and click the "Submit" button.
     The entered stock will be added to the tracked stocks list on the left side of the page.

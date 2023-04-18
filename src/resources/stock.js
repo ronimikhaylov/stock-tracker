@@ -72,28 +72,42 @@ function getPreviousBusinessDay() {
  * const stock is an object that contains functions to fetch stock data from the IEX Cloud API
  */
 export const stock = {
-  latestPrice: (ticker, callback) => {
-    fetch(stock.latestPriceURL(ticker))
-      .then((response) => response.json())
-      .then((data) => callback(stock.formatPriceData(data)));
+  // Fetches the latest price and previous business day's closing price
+  fetchPrices: async (ticker, callback) => {
+    const latestPriceData = await fetch(stock.latestPriceURL(ticker)).then((response) => response.json());
+    const prevBusinessDay = getPreviousBusinessDay();
+    const yesterdaysCloseData = await fetch(stock.yesterdaysCloseURL(ticker, prevBusinessDay)).then((response) => response.json());
+    callback({
+      latestPrice: stock.formatPriceData(latestPriceData),
+      yesterdaysClose: stock.formatPriceData(yesterdaysCloseData)
+    });
   },
 
   // formatPriceData takes the raw data from the API and returns an object with the price, date, and time
-  formatPriceData: (data) => {
+  formatPriceData: (data) => { // Q. where is this function called
+    // A. It is called in the latestPrice function
     if (!data || data.length === 0) {
       return { price: null, date: null, time: null };
     }
 
     const stockData = data[data.length - 1];
-    console.log("stockData:", stockData);
+    console.log("stockData:", stockData); // this is supposed to be the latest price
     const formattedData = {};
+    formattedData.price = stockData.price;
+    // if (stockData.close === null) {
+    //   formattedData.price = stockData.marketClose;
+    //   console.log("marketClose:", stockData.marketClose);
+    // } else if (stockData.price !== null){
+    //   formattedData.price = stockData.price;
+    //}
     if (stockData.close === null) {
-      formattedData.price = stockData.marketClose;
-    } else {
-      formattedData.price = stockData.price;
+      formattedData.price = stockData.close;
+      console.log("marketClose:", stockData.close);
     }
     formattedData.date = stockData.date;
     formattedData.time = stockData.label;
+
+    console.log("formattedData:", formattedData) // thi8s is the latest price after formatting
     return formattedData;
   },
  // getYesterdaysClose takes the ticker and date and returns the previous business day's closing price
@@ -101,7 +115,7 @@ export const stock = {
     fetch(stock.yesterdaysCloseURL(ticker, date))
       .then((response) => response.json())
       .then((data) => {
-        console.log("Raw data:", data);
+        console.log("Raw data:", data); //
         callback(stock.formatPriceData(data)); // callback function is passed in from the component 
         // because the component is the one that needs to update the state
         
@@ -109,13 +123,14 @@ export const stock = {
       });
   },
 
+  
   latestPriceURL: (ticker) => {
     return `${iex.base_url}/stock/${ticker}/intraday-prices?chartLast=1&token=${iex.api_token}`;
   },
 
+
   yesterdaysCloseURL: (ticker, date) => {
-    const yesDate = getPreviousBusinessDay();
-    return `${iex.base_url}/stock/${ticker}/intraday-prices?chartLast=1&exactDate=${yesDate}&token=${iex.api_token}`;
+    return `${iex.base_url}/stock/${ticker}/chart/date/${date}?chartByDay=true&token=${iex.api_token}`;
   },
 };
 

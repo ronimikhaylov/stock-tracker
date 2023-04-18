@@ -25,7 +25,7 @@ const StockChart = () => {
     const fetchChartData = async () => {
       // Fetch the stock chart data for the given ticker using the IEX API
       const response = await fetch(
-        `https://cloud.iexapis.com/stable/stock/${ticker}/chart/1m?token=YOUR_IEX_API_TOKEN`
+        `https://cloud.iexapis.com/stable/stock/${ticker}/chart/1m?token=IEX_TOKEN`
       );
       // Parse the response as JSON
       const data = await response.json();
